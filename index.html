@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="./resources/ol.css">
+        <link rel="stylesheet" href="resources/fontawesome-all.min.css">
+        <link href="resources/photon-geocoder-autocomplete.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="./resources/ol-layerswitcher.css">
+        <link rel="stylesheet" href="./resources/qgis2web.css">
+        <style>
+        html, body {
+            background-color: #ffffff;
+        }
+        .ol-control > * {
+            background-color: #f8f8f8!important;
+            color: #444444!important;
+            border-radius: 0px;
+        }
+        .ol-attribution a, .gcd-gl-input::placeholder, .search-layer-input-search::placeholder {
+            color: #444444!important;
+        }
+        .search-layer-input-search {
+            background-color: #f8f8f8!important;
+        }
+        .ol-control > *:focus, .ol-control >*:hover {
+            background-color: rgba(248, 248, 248, 0.7)!important;
+        } 
+        .ol-control {
+            background-color: rgba(255,255,255,.4) !important;
+            padding: 2px !important;
+        } 
+
+        /* Painel de fontes independente do qgis2web */
+        .fontes-painel {position:fixed;bottom:42px;left:10px;z-index:10000;max-width:calc(100vw - 20px);font-family:Arial,sans-serif;color:#1f2937;filter:drop-shadow(0 4px 12px rgba(0,0,0,.16));}
+        .fontes-painel > summary {cursor:pointer;list-style:none;display:flex;align-items:center;gap:9px;background:#173b55;color:#fff;padding:11px 15px;border-radius:9px;font-size:13px;font-weight:700;user-select:none;width:max-content;max-width:100%;box-sizing:border-box;}
+        .fontes-painel > summary::-webkit-details-marker {display:none;}
+        .fontes-painel > summary:after {content:'▸';margin-left:7px;}
+        .fontes-painel[open] > summary:after {content:'▾';}
+        .fontes-conteudo {width:340px;max-width:calc(100vw - 20px);max-height:min(440px,65vh);overflow-y:auto;box-sizing:border-box;padding:15px;background:#fff;border:1px solid #dfe7ee;border-radius:0 9px 9px 9px;font-size:13px;line-height:1.45;}
+        .fontes-conteudo h2 {font-size:15px;margin:0 0 7px;}
+        .fontes-conteudo p {margin:5px 0 10px;}
+        .fontes-conteudo details {border-top:1px solid #e5e7eb;padding:10px 0;}
+        .fontes-conteudo details summary {cursor:pointer;font-weight:700;color:#173b55;}
+        .fontes-conteudo a {color:#12669a;text-decoration:underline;overflow-wrap:anywhere;}
+        .fontes-conteudo small {color:#667085;display:block;margin-top:9px;}
+        @media(max-width:480px){.fontes-painel{bottom:35px;left:7px}.fontes-conteudo{max-height:55vh}}
+        </style>
+
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+            <div id="popup" class="ol-popup">
+                <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+                <div id="popup-content"></div>
+            </div>
+        </div>
+
+        <details class="fontes-painel">
+            <summary>ⓘ Fontes e referências</summary>
+            <div class="fontes-conteudo">
+                <h2>Documentação do mapa</h2>
+                <p>Links para bases oficiais e informações de referência. A indicação de uma fonte nesta lista não comprova, por si só, que ela foi usada em cada camada.</p>
+                <details>
+                    <summary>Setores censitários — IBGE</summary>
+                    <p>Malhas geográficas e divisões intramunicipais.</p>
+                    <a href="https://www.ibge.gov.br/geociencias/organizacao-do-territorio/malhas-territoriais/26565-malhas-de-setores-censitarios-divisoes-intramunicipais.html" target="_blank" rel="noopener noreferrer">Consultar e baixar malhas no IBGE ↗</a>
+                </details>
+                <details>
+                    <summary>Dados do Censo 2022 — IBGE</summary>
+                    <p>Informações demográficas, resultados e arquivos estatísticos.</p>
+                    <a href="https://www.ibge.gov.br/estatisticas/sociais/populacao/22827-censo-demografico-2022.html" target="_blank" rel="noopener noreferrer">Consultar resultados do Censo ↗</a>
+                    <p><a href="https://sidra.ibge.gov.br/" target="_blank" rel="noopener noreferrer">Tabelas no SIDRA ↗</a></p>
+                </details>
+                <details>
+                    <summary>Imagens de satélite — Google</summary>
+                    <p>Inserir aqui o link da imagem/visualização utilizada, a data da imagem e a atribuição exigida pelo provedor, caso essa fonte tenha sido realmente usada.</p>
+                    <a href="https://earth.google.com/web/" target="_blank" rel="noopener noreferrer">Abrir Google Earth ↗</a>
+                </details>
+                <details>
+                    <summary>Informações técnicas do mapa</summary>
+                    <p>Publicação em qgis2web / OpenLayers. Camadas identificadas no pacote: setores censitários e dados vetoriais de Lagoa Salgada e Monte Alegre.</p>
+                    <p><a href="https://qgis.org/download/" target="_blank" rel="noopener noreferrer"><strong>Baixar e instalar o QGIS (site oficial) ↗</strong></a></p>
+                    <p><a href="https://qgis.org/" target="_blank" rel="noopener noreferrer">QGIS — conhecer o projeto ↗</a></p>
+                    <p><a href="https://plugins.qgis.org/plugins/qgis2web/" target="_blank" rel="noopener noreferrer">qgis2web — plugin de exportação ↗</a></p>
+                    <p><strong>Elaboração:</strong> preencher responsável e data de atualização.</p>
+                </details>
+                <small>Os links são páginas de referência. Confira a edição, os arquivos exatos e as licenças antes de publicar a atribuição definitiva.</small>
+            </div>
+        </details>
+        <script src="resources/qgis2web_expressions.js"></script>
+        <script src="./resources/functions.js"></script>
+        <script src="./resources/ol.js"></script>
+        <script src="./resources/ol-layerswitcher.js"></script>
+        <script src="resources/photon-geocoder-autocomplete.min.js"></script>
+        <script src="resources/olms.js"></script>
+        <script src="layers/24078070500_setor_1.js"></script><script src="layers/24066010500_setor_2.js"></script><script src="layers/SETORESCENSITMONTEALGRE_3.js"></script><script src="layers/2406601_LAGOA_SALGADA_4.js"></script><script src="layers/2407807_MONTE_ALEGRE_5.js"></script>
+        <script src="styles/24078070500_setor_1_style.js"></script><script src="styles/24066010500_setor_2_style.js"></script><script src="styles/SETORESCENSITMONTEALGRE_3_style.js"></script><script src="styles/2406601_LAGOA_SALGADA_4_style.js"></script><script src="styles/2407807_MONTE_ALEGRE_5_style.js"></script>
+        <script src="./layers/layers.js" type="text/javascript"></script> 
+        <script src="./resources/Autolinker.min.js"></script>
+        <script src="./resources/qgis2web.js"></script>        
+    </body>
+</html>
